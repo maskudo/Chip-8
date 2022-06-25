@@ -45,7 +45,7 @@ namespace chip8
         uint16_t opcode;
 
         // methods
-        void LoadRom(const char *filename);
+        bool LoadROM(const char *filename);
         void Reset();
         void stackPush(uint16_t data);
         uint16_t stackPop();

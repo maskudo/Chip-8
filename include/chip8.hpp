@@ -42,7 +42,13 @@ namespace chip8
         uint32_t video[64 * 32]{};
         uint16_t opcode;
 
+        // methods
         void LoadRom(const char *filename);
+        void Reset();
+        void stackPush(uint16_t data);
+        uint16_t stackPop();
+        void Tick();
+        void TickTimer();
     };
 }
 void hello();

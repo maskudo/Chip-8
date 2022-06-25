@@ -41,15 +41,7 @@ namespace chip8
         }
         for (int i = 0; i < 80; i++)
         {
-            memory[i] = chip8::fontset[i];
-        }
-    }
-    Chip8::Chip8()
-    {
-        // initialize font
-        for (int i = 0; i < 80; i++)
-        {
-            memory[i] = chip8::fontset[i];
+            memory[i] = font[i];
         }
     }
     bool Chip8::LoadROM(const char *filename)

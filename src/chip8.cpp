@@ -1,5 +1,6 @@
 #include "chip8.hpp"
 #include <iostream>
+#include <fstream>
 using std::cout;
 using std::endl;
 
@@ -50,5 +51,30 @@ namespace chip8
         {
             memory[i] = chip8::fontset[i];
         }
+    }
+    bool Chip8::LoadROM(const char *filename)
+    {
+        std::ifstream ifile;
+
+        ifile.open(filename, std::ios::binary);
+
+        if (!ifile)
+        {
+            return false;
+        }
+
+        int i = 0;
+        char b;
+
+        while (ifile.get(b))
+        {
+            // 0x200 = 500
+            memory[i + 512] = b;
+            i++;
+        }
+
+        ifile.close();
+
+        return true;
     }
 }

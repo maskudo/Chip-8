@@ -1,6 +1,7 @@
 
 #pragma once
 #include <cstdint>
+#include <array>
 
 namespace chip8
 {
@@ -28,18 +29,19 @@ namespace chip8
     class Chip8
     {
     public:
-        uint8_t registers[16]{};
-        uint8_t memory[4096]{};
-        // index register
+        std::array<uint16_t, 16> registers;
+        std::array<uint16_t, 16> stack;
+        std::array<uint8_t, 4096> memory;
+        std::array<uint8_t, 16> keypad;
+        std::array<uint32_t, 64 * 32> display;
+
         uint16_t index{};
         uint16_t pc{};
-        uint16_t stack[16]{};
         // 8 bit stack pointer for 16 stack addresses
         uint8_t sp{};
         uint8_t delayTimer{};
         uint8_t soundTimer{};
-        uint8_t keypad[16]{};
-        uint32_t video[64 * 32]{};
+
         uint16_t opcode;
 
         // methods

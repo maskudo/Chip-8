@@ -5,9 +5,10 @@
 
 namespace chip8
 {
-    const unsigned int FONTSET_SIZE = 80;
-    uint8_t fontset[FONTSET_SIZE] =
-        {
+    class Chip8
+    {
+    public:
+        uint8_t font[80] = {
             0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
             0x20, 0x60, 0x20, 0x20, 0x70, // 1
             0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
@@ -23,12 +24,8 @@ namespace chip8
             0xF0, 0x80, 0x80, 0x80, 0xF0, // C
             0xE0, 0x90, 0x90, 0x90, 0xE0, // D
             0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-            0xF0, 0x80, 0xF0, 0x80, 0x80  // F
-    };
-
-    class Chip8
-    {
-    public:
+            0xF0, 0x80, 0xF0, 0x80, 0x80, // F
+        };
         std::array<uint16_t, 16> registers;
         std::array<uint16_t, 16> stack;
         std::array<uint8_t, 4096> memory;

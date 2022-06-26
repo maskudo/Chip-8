@@ -78,6 +78,37 @@ namespace chip8
     }
     void Chip8::Tick()
     {
+        // left shift first byte and OR second byte for 16 bit instruction
+        // big endian
         opcode = memory[pc] << 8 | memory[pc + 1];
+        bool invalid = false;
+
+        switch (opcode & 0xF000)
+        {
+        case 0x0000:
+        {
+            switch (opcode)
+            {
+            // clear screen
+            case 0x00E0:
+            {
+                for (uint32_t &i : display)
+                {
+                    i = 0;
+                }
+                pc += 2;
+                break;
+            }
+
+            default:
+                break;
+            }
+
+            break;
+        }
+
+        default:
+            break;
+        }
     }
 }

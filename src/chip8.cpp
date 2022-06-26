@@ -4,11 +4,6 @@
 using std::cout;
 using std::endl;
 
-void hello()
-{
-    cout << "hello from chip8" << endl;
-    getchar();
-}
 namespace chip8
 {
     void Chip8::Reset()
@@ -62,6 +57,7 @@ namespace chip8
         {
             // 0x200 = 500
             memory[i + 512] = b;
+            cout << b << "," << memory[i + 512] << endl;
             i++;
         }
 
@@ -80,5 +76,8 @@ namespace chip8
         sp--;
         return stack[sp];
     }
-
+    void Chip8::Tick()
+    {
+        opcode = memory[pc] << 8 | memory[pc + 1];
+    }
 }

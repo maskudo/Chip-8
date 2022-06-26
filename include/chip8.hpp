@@ -50,4 +50,3 @@ namespace chip8
         void TickTimer();
     };
 }
-void hello();

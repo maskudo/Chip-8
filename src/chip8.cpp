@@ -69,4 +69,16 @@ namespace chip8
 
         return true;
     }
+    void Chip8::stackPush(uint16_t data)
+    {
+        stack[sp] = data;
+        sp++;
+    }
+
+    uint16_t Chip8::stackPop()
+    {
+        sp--;
+        return stack[sp];
+    }
+
 }

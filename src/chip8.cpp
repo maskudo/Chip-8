@@ -235,4 +235,12 @@ void Chip8::Tick() {
         break;
     }
 }
+void Chip8::TickTimer() {
+    if (delayTimer > 0) {
+        delayTimer--;
+    }
+    if (soundTimer > 0) {
+        soundTimer--;
+    }
+}
 } // namespace chip8

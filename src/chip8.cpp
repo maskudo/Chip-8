@@ -198,6 +198,39 @@ void Chip8::Tick() {
         }
         break;
     }
+    // 9xy0 - SNE Vx, Vy Skip next instruction if Vx != Vy.
+    case 0x9000: {
+        if (registers[(0x0F00 & opcode) >> 8] != (registers[(0x00F0 & opcode) >> 4]))
+            pc += 2;
+        break;
+    }
+    // Annn - LD I, addr Set Index = nnn.
+    case 0xA000: {
+        index = opcode & 0x0FFF;
+        break;
+    }
+    // Dxyn - DRW Vx, Vy, nibble
+    // Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision.
+    case 0xD000: {
+        auto vx = registers[(0x0F00 & opcode) >> 8];
+        auto vy = registers[(0x00F0 & opcode) >> 4];
+        auto x = vx % 64;
+        auto y = vx % 32;
+        uint8_t height = opcode & 0x000F;
+        registers[0xF] = 0;
+        for (int yLine = 0; yLine < height; yLine++) {
+            auto pixel = memory[index + yLine];
+            for (int xLine = 0; xLine < 8; xLine++) {
+                if ((pixel & (0x8000 >> xLine)) != 0) {
+                    if (display[(x + xLine + ((y + yLine) * 64))] == 1) {
+                        registers[0xf] = 1;
+                    }
+                    display[x + xLine + ((y + yLine) * 64)] ^= 1;
+                }
+            }
+        }
+        break;
+    }
     default:
         break;
     }

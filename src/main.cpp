@@ -7,4 +7,7 @@ int main(int argc, char **argv) {
         std::cerr << "Unable to load " << argv[1] << std::endl;
         return -1;
     }
+    while (true) {
+        interpreter.Tick();
+    }
 }

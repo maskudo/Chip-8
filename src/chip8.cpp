@@ -47,7 +47,6 @@ bool Chip8::LoadROM(const char *filename) {
     while (ifile.get(b)) {
         // 0x200 = 500
         memory[i + 512] = b;
-        cout << b << "," << memory[i + 512] << endl;
         i++;
     }
 

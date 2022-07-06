@@ -208,6 +208,17 @@ void Chip8::Tick() {
         index = opcode & 0x0FFF;
         break;
     }
+    // Bnnn - JP V0, addr
+    // Jump to location nnn + V0.
+    case 0xB000: {
+        pc = registers[0x0000] + (opcode & 0x0FFF);
+        break;
+    }
+    // Cxkk - RND Vx, byte
+    // Set Vx = random byte AND kk.
+    case 0xC000: {
+        break;
+    }
     // Dxyn - DRW Vx, Vy, nibble
     // Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision.
     case 0xD000: {
@@ -237,7 +248,35 @@ void Chip8::Tick() {
         }
         break;
     }
+    // Ex9E - SKP Vx
+    // Skip next instruction if key with the value of Vx is pressed.
+    case 0xE000: {
+        switch (opcode & 0x00FF) {
+        case 0x9E: {
+            auto key = registers[(0x0F00 & opcode) >> 8];
+            if (keypad[key]) {
+                pc += 2;
+            }
+            break;
+        }
+        // ExA1 - SKNP Vx
+        // Skip next instruction if key with the value of Vx is not pressed.
+        case 0x00A1: {
+            auto key = registers[(0x0F00 & opcode) >> 8];
+            if (!keypad[key]) {
+                pc += 2;
+            }
+            break;
+        }
+        default:
+            invalid = true;
+            break;
+        }
+
+        break;
+    }
     default:
+        invalid = true;
         break;
     }
 }

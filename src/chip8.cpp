@@ -217,14 +217,14 @@ void Chip8::Tick() {
         auto y = vx % 32;
         uint8_t height = opcode & 0x000F;
         registers[0xF] = 0;
-        for (int yLine = 0; yLine < height; yLine++) {
-            auto pixel = memory[index + yLine];
-            for (int xLine = 0; xLine < 8; xLine++) {
-                if ((pixel & (0x8000 >> xLine)) != 0) {
-                    if (display[(x + xLine + ((y + yLine) * 64))] == 1) {
+        for (int row = 0; row < height; row++) {
+            auto pixel = memory[index + row];
+            for (int col = 0; col < 8; col++) {
+                if ((pixel & (0x80 >> col)) != 0) {
+                    if (display[(x + col + ((y + row) * 64))] == 1) {
                         registers[0xf] = 1;
                     }
-                    display[x + xLine + ((y + yLine) * 64)] ^= 1;
+                    display[x + col + ((y + row) * 64)] ^= 1;
                 }
             }
         }

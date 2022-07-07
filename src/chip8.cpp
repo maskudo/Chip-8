@@ -16,17 +16,17 @@ void Chip8::Reset() {
     delayTimer = 0;
     soundTimer = 0;
 
-    for (uint32_t &data : display) {
+    for (auto &data : display) {
         data = 0;
     }
-    for (uint16_t &i : registers) {
+    for (auto &i : registers) {
         i = 0;
     }
-    for (uint16_t &i : stack) {
+    for (auto &i : stack) {
         i = 0;
     }
     // clear memory and insert font
-    for (uint8_t &i : memory) {
+    for (auto &i : memory) {
         i = 0;
     }
     for (int i = 0; i < 80; i++) {
@@ -75,7 +75,7 @@ void Chip8::Tick() {
         switch (opcode) {
         // 00E0 - CLS clear screen
         case 0x00E0: {
-            for (uint32_t &i : display) {
+            for (auto &i : display) {
                 i = 0;
             }
             break;
@@ -233,18 +233,23 @@ void Chip8::Tick() {
         for (int row = 0; row < height; row++) {
             auto pixel = memory[index + row];
             for (int col = 0; col < 8; col++) {
-                if ((pixel & (0x80 >> col)) != 0) {
-                    if (display[(x + col + ((y + row) * 64))] == 1) {
-                        registers[0xf] = 1;
+                if ((pixel & (0x80 >> col))) {
+                    if (display[((x + col) + ((y + row) * 64))] == 1) {
+                        registers[0xF] = 1;
                     }
-                    display[x + col + ((y + row) * 64)] ^= 1;
+                    display[((x + col) + ((y + row) * 64))] ^= 1;
                 }
             }
         }
         std::cout << "draw" << endl;
         for (auto i = 0; i < 32; i++) {
             for (auto j = 0; j < 64; j++) {
-                std::cout << display[i * 32 + j];
+                // std::cout << display[(i * 32) + j];
+                if (display[i * 32 + j]) {
+                    std::cout << "*";
+                } else {
+                    std::cout << ".";
+                }
             }
             std::cout << std::endl;
         }

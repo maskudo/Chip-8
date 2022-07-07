@@ -120,7 +120,7 @@ void Chip8::Tick() {
     }
     // 5xy0 - SE Vx, Vy  Skip next instruction if Vx = Vy.
     case 0x5000: {
-        if (registers[(0x0F00 & opcode) >> 8] == registers[0x00F0 & opcode] >> 4) {
+        if (registers[(0x0F00 & opcode) >> 8] == registers[(0x00F0 & opcode) >> 4]) {
             pc += 2;
         }
         break;
@@ -245,7 +245,7 @@ void Chip8::Tick() {
         for (auto i = 0; i < 32; i++) {
             for (auto j = 0; j < 64; j++) {
                 // std::cout << display[(i * 32) + j];
-                if (display[i * 32 + j]) {
+                if (display[i * 64 + j]) {
                     std::cout << "*";
                 } else {
                     std::cout << ".";
@@ -381,6 +381,7 @@ void Chip8::Tick() {
     if (invalid) {
         std::cerr << "Invalid opcode: " << opcode << std::endl;
     }
+    std::cout << std::hex << pc << " " << opcode << std::endl;
 }
 void Chip8::TickTimer() {
     if (delayTimer > 0) {

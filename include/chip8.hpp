@@ -23,7 +23,7 @@ public:
         0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
         0xF0, 0x80, 0xF0, 0x80, 0x80, // F
     };
-    std::array<uint16_t, 16> registers;
+    std::array<uint8_t, 16> registers;
     std::array<uint16_t, 16> stack;
     std::array<uint8_t, 4096> memory;
     std::array<uint8_t, 16> keypad;

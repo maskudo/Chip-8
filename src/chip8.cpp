@@ -275,9 +275,10 @@ void Chip8::Tick() {
             }
             break;
         }
-        default:
+        default: {
             invalid = true;
             break;
+        }
         }
 
         break;
@@ -370,10 +371,12 @@ void Chip8::Tick() {
             break;
         }
         }
+        break;
     }
-    default:
+    default: {
         invalid = true;
         break;
+    }
     }
     if (invalid) {
         std::cerr << "Invalid opcode: " << opcode << std::endl;

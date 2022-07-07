@@ -1,6 +1,7 @@
 #include "chip8.hpp"
 #include <fstream>
 #include <iostream>
+#include <stdlib.h>
 using std::cout;
 using std::endl;
 
@@ -217,6 +218,7 @@ void Chip8::Tick() {
     // Cxkk - RND Vx, byte
     // Set Vx = random byte AND kk.
     case 0xC000: {
+        registers[(opcode & 0x0F00) >> 8] = (rand() % 0xFF) & (opcode & 0x00FF);
         break;
     }
     // Dxyn - DRW Vx, Vy, nibble
@@ -275,9 +277,101 @@ void Chip8::Tick() {
 
         break;
     }
+
+    case 0xF000: {
+        switch (0x00FF & opcode) {
+        // Fx07 - LD Vx, DT
+        // Set Vx = delay timer value.
+        case 0x0007: {
+            registers[(0x0F00 & opcode) >> 8] = delayTimer;
+            break;
+        }
+        // Fx0A - LD Vx, K
+        // Wait for a key press, store the value of the key in Vx.
+        case 0x000A: {
+            bool keypress = false;
+            for (int i = 0; i < 16; i++) {
+                if (keypad[i]) {
+                    registers[(opcode & 0x0F00) >> 8] = i;
+                    keypress = true;
+                }
+            }
+            if (!keypress) {
+                pc -= 2;
+            }
+            break;
+        }
+        // Fx15 - LD DT, Vx
+        // Set delay timer = Vx.
+        case 0x0015: {
+            delayTimer = registers[(opcode & 0x0F00) >> 8];
+            break;
+        }
+        // Fx18 - LD ST, Vx
+        // Set sound timer = Vx.
+        case 0x0018: {
+            soundTimer = registers[(opcode & 0x0F00) >> 8];
+            break;
+        }
+        // Fx1E - ADD I, Vx
+        // Set I = I + Vx.
+        // some interpreters set VF to 1 if I “overflows” from 0FFF to above 1000
+        // Spacefight 2091!, relies on this behavior.
+        case 0x001E: {
+            if (index + registers[(opcode & 0x0F00) >> 8] > 0xFFF) {
+                registers[0xF] = 1;
+            } else {
+                registers[0xF] = 0;
+            }
+            index += registers[(opcode & 0x0F00) >> 8];
+            break;
+        }
+        // Fx29 - LD F, Vx
+        // Set I = location of sprite for digit Vx.
+        case 0x0029: {
+            // Sprites are stored from 0x0000 to 0x0200. Each sprite is of 5 bytes
+            index = registers[(opcode & 0x0F00) >> 8] * 0x5;
+            break;
+        }
+        // Fx33 - LD B, Vx
+        // Store BCD representation of Vx in memory locations I, I+1, and I+2.
+        case 0x0033: {
+            auto value = registers[(opcode & 0x0F00) >> 8];
+            memory[index + 2] = value % 10;
+            value /= 10;
+            memory[index + 1] = value % 10;
+            value /= 10;
+            memory[index] = value % 10;
+            break;
+        }
+        // Fx55 - LD [I], Vx
+        // Store registers V0 through Vx in memory starting at location I.
+        case 0x0055: {
+            for (int i = 0; i <= (opcode & 0x0F00) >> 8; i++) {
+                memory[index + i] = registers[i];
+            }
+            break;
+        }
+        // Fx65 - LD Vx, [I]
+        // Read registers V0 through Vx from memory starting at location I.
+        case 0x0065: {
+            for (int i = 0; i <= (opcode & 0x0F00) >> 8; i++) {
+                registers[i] = memory[index + i];
+            }
+            break;
+        }
+        default: {
+            invalid = true;
+            break;
+        }
+        }
+    }
     default:
         invalid = true;
         break;
+    }
+    if (invalid) {
+        std::cerr << "Invalid opcode: " << opcode << std::endl;
     }
 }
 void Chip8::TickTimer() {

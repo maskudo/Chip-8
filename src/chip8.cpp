@@ -227,7 +227,7 @@ void Chip8::Tick() {
         auto vx = registers[(0x0F00 & opcode) >> 8];
         auto vy = registers[(0x00F0 & opcode) >> 4];
         auto x = vx % 64;
-        auto y = vx % 32;
+        auto y = vy % 32;
         uint8_t height = opcode & 0x000F;
         registers[0xF] = 0;
         for (int row = 0; row < height; row++) {
@@ -244,7 +244,6 @@ void Chip8::Tick() {
         std::cout << "draw" << endl;
         for (auto i = 0; i < 32; i++) {
             for (auto j = 0; j < 64; j++) {
-                // std::cout << display[(i * 32) + j];
                 if (display[i * 64 + j]) {
                     std::cout << "*";
                 } else {
@@ -381,7 +380,7 @@ void Chip8::Tick() {
     if (invalid) {
         std::cerr << "Invalid opcode: " << opcode << std::endl;
     }
-    std::cout << std::hex << pc << " " << opcode << std::endl;
+    // std::cout << std::hex << pc << " " << opcode << std::endl;
 }
 void Chip8::TickTimer() {
     if (delayTimer > 0) {

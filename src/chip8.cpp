@@ -241,17 +241,17 @@ void Chip8::Tick() {
                 }
             }
         }
-        std::cout << "draw" << endl;
-        for (auto i = 0; i < 32; i++) {
-            for (auto j = 0; j < 64; j++) {
-                if (display[i * 64 + j]) {
-                    std::cout << "*";
-                } else {
-                    std::cout << ".";
-                }
-            }
-            std::cout << std::endl;
-        }
+        // std::cout << "draw" << endl;
+        // for (auto i = 0; i < 32; i++) {
+        //     for (auto j = 0; j < 64; j++) {
+        //         if (display[i * 64 + j]) {
+        //             std::cout << "*";
+        //         } else {
+        //             std::cout << ".";
+        //         }
+        //     }
+        //     std::cout << std::endl;
+        // }
         break;
     }
     // Ex9E - SKP Vx

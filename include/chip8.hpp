@@ -27,7 +27,7 @@ public:
     std::array<uint16_t, 16> stack;
     std::array<uint8_t, 4096> memory;
     std::array<uint8_t, 16> keypad;
-    std::array<uint32_t, 64 * 32> display;
+    uint32_t display[64 * 32];
 
     uint16_t index{};
     uint16_t pc{};

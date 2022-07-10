@@ -3,13 +3,13 @@ project(chip8)
 
 #set c++ standard
 set(CMAKE_CXX_STANDARD 17)
-set(SDL2_DIR vcpkg_installed/x64-windows/share/sdl2/)
-set(CMAKE_FIND_DEBUG_MODE 1)
-find_package(SDL2 CONFIG REQUIRED)
+set(SDL2_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/deps/SDL2/include/SDL2)
+set(SDL2_LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/deps/SDL2//lib)
 
-include_directories(./include)
+link_directories(${SDL2_LIB_DIR})
+include_directories(./include ${SDL2_INCLUDE_DIR})
 
 add_library(chip8 ./src/chip8.cpp)
 add_executable(main ./src/main.cpp)
 
-target_link_libraries(main PRIVATE SDL2::SDL2 SDL2::SDL2main)
+target_link_libraries(main chip8 SDL2main SDL2) 

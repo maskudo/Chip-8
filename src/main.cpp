@@ -1,34 +1,33 @@
 #define SDL_MAIN_HANDLED
-#include "SDL.h"
 #include "chip8.hpp"
 #include "graphics.hpp"
+#include <chrono>
 #include <iostream>
 int main(int argc, char **argv) {
-    // chip8::Chip8 interpreter = chip8::Chip8();
-    // interpreter.Reset();
-    // if (!interpreter.LoadROM(argv[1])) {
-    //     std::cerr << "Unable to load " << argv[1] << std::endl;
-    //     return -1;
-    // }
-    // while (true) {
-    //     interpreter.Tick();
-    // }
-    SDL_Window *window = nullptr;
     const int SCALE = 10;
-    Graphics g = Graphics();
-
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cerr << "Video initialization error: " << SDL_GetError() << std::endl;
-    } else {
-        window = SDL_CreateWindow("Chip8", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCALE * 32, SCALE * 64, SDL_WINDOW_SHOWN);
-        if (window == NULL) {
-            std::cerr << "Window creation error" << SDL_GetError() << std::endl;
-        } else {
-            SDL_UpdateWindowSurface(window);
-            SDL_Delay(2000);
-        }
+    Graphics graphics("Chip8", SCALE * 64, SCALE * 32, 64, 32);
+    chip8::Chip8 interpreter = chip8::Chip8();
+    interpreter.Reset();
+    if (!interpreter.LoadROM(argv[1])) {
+        std::cerr << "Unable to load" << argv[1] << std::endl;
+        return -1;
     }
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+    // number of bytes in a row
+    int videoPitch = sizeof(interpreter.display[0]) * 64;
+
+    auto lastCycleTime = std::chrono::high_resolution_clock::now();
+    bool quit = false;
+
+    while (!quit) {
+        quit = graphics.ProcessInput(interpreter.keypad);
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        float dt = std::chrono::duration<float, std::chrono::milliseconds::period>(currentTime - lastCycleTime).count();
+
+        interpreter.Tick();
+
+        graphics.Update(interpreter.display, videoPitch);
+        SDL_Delay(16);
+    }
+
     return 0;
 }

@@ -234,24 +234,14 @@ void Chip8::Tick() {
             auto pixel = memory[index + row];
             for (int col = 0; col < 8; col++) {
                 if ((pixel & (0x80 >> col))) {
-                    if (display[((x + col) + ((y + row) * 64))] == 1) {
+                    // change 1 to 0xFFFFFFFF for SDL2
+                    if (display[((x + col) + ((y + row) * 64))] == 0xFFFFFFFF) {
                         registers[0xF] = 1;
                     }
-                    display[((x + col) + ((y + row) * 64))] ^= 1;
+                    display[((x + col) + ((y + row) * 64))] ^= 0xFFFFFFFF;
                 }
             }
         }
-        // std::cout << "draw" << endl;
-        // for (auto i = 0; i < 32; i++) {
-        //     for (auto j = 0; j < 64; j++) {
-        //         if (display[i * 64 + j]) {
-        //             std::cout << "*";
-        //         } else {
-        //             std::cout << ".";
-        //         }
-        //     }
-        //     std::cout << std::endl;
-        // }
         break;
     }
     // Ex9E - SKP Vx

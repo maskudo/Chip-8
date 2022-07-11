@@ -6,7 +6,7 @@ Graphics::Graphics(char const *title, int windowWidth, int windowHeight, int tex
         std::cerr << "SDL Failed To Init: " << SDL_GetError() << std::endl;
     }
 
-    window = SDL_CreateWindow(title, 0, 0, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
     if (window == NULL) {
         std::cout << "SDL Faild To Create Window: " << SDL_GetError() << std::endl;
     }

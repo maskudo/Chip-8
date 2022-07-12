@@ -8,19 +8,19 @@ Graphics::Graphics(char const *title, int windowWidth, int windowHeight, int tex
 
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
     if (window == NULL) {
-        std::cout << "SDL Faild To Create Window: " << SDL_GetError() << std::endl;
+        std::cerr << "SDL Faild To Create Window: " << SDL_GetError() << std::endl;
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (renderer == NULL) {
-        std::cout << "SDL Failed To Create a Renderer: " << SDL_GetError() << std::endl;
+        std::cerr << "SDL Failed To Create a Renderer: " << SDL_GetError() << std::endl;
     }
 
     texture = SDL_CreateTexture(
         renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, textureWidth, textureHeight);
 
     if (texture == NULL) {
-        std::cout << "SDL Failed To Create a Texture: " << SDL_GetError() << std::endl;
+        std::cerr << "SDL Failed To Create a Texture: " << SDL_GetError() << std::endl;
     }
 }
 Graphics::~Graphics() {

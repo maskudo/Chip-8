@@ -25,6 +25,9 @@ void Chip8::Reset() {
     for (auto &i : stack) {
         i = 0;
     }
+    for (auto &i : keypad) {
+        i = 0;
+    }
     // clear memory and insert font
     for (auto &i : memory) {
         i = 0;

@@ -38,13 +38,13 @@ void Graphics::Update(void const *buffer, int pitch) {
 bool Graphics::ProcessInput(uint8_t *keys) {
     bool quit = false;
     SDL_Event event;
-    while (SDL_PollEvent(&event) != 0) {
+    while (SDL_PollEvent(&event)) {
         switch (event.type) {
-        case SDL_QUIT:
+        case SDL_QUIT: {
             quit = true;
-            break;
+        } break;
+
         case SDL_KEYDOWN: {
-            std::cout << event.key.keysym.sym << std::endl;
             switch (event.key.keysym.sym) {
             case SDLK_ESCAPE: {
                 quit = true;
@@ -181,12 +181,10 @@ bool Graphics::ProcessInput(uint8_t *keys) {
             case SDLK_v: {
                 keys[0xF] = 0;
             } break;
-
-            default:
-                break;
             }
         } break;
         }
     }
+
     return quit;
 }

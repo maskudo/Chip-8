@@ -4,10 +4,9 @@
 #include <iostream>
 int main(int argc, char **argv) {
     const int SCALE = 10;
-    const int FREQ = 500;
-    const int FPS = 60;
+    const int FREQ = 800;
     int delay = 1000 / FREQ;
-    Graphics graphics("Chip8", SCALE * 64, SCALE * 32, 64, 32);
+    Graphics *graphics = new Graphics("Chip8", SCALE * 64, SCALE * 32, 64, 32);
     chip8::Chip8 interpreter = chip8::Chip8();
     interpreter.Reset();
     if (!interpreter.LoadROM(argv[1])) {
@@ -21,19 +20,14 @@ int main(int argc, char **argv) {
     int nextFrame = SDL_GetTicks();
     while (!quit) {
         int start = SDL_GetTicks();
-        quit = graphics.ProcessInput(interpreter.keypad);
+        quit = graphics->ProcessInput(interpreter.keypad);
 
-        interpreter.Tick();
-        if (SDL_GetTicks() >= nextFrame) {
-            graphics.Update(interpreter.display, videoPitch);
-            nextFrame = SDL_GetTicks() + (1000 / FPS);
-            // std::cout << SDL_GetTicks() << std::endl;
-        }
+        interpreter.Tick(graphics);
 
         int totalDelay = SDL_GetTicks() - start;
         if (totalDelay < delay)
             SDL_Delay(delay - totalDelay);
     }
-
+    delete graphics;
     return 0;
 }

@@ -67,7 +67,7 @@ uint16_t Chip8::stackPop() {
     sp--;
     return stack[sp];
 }
-void Chip8::Tick() {
+void Chip8::Tick(Graphics *graphicsPtr) {
     // left shift first byte and OR second byte for 16 bit instruction
     // big endian
     opcode = memory[pc] << 8 | memory[pc + 1];
@@ -263,6 +263,8 @@ void Chip8::Tick() {
                 }
             }
         }
+        int videoPitch = sizeof(display[0]) * 64;
+        graphicsPtr->Update(display, videoPitch);
         break;
     }
     // Ex9E - SKP Vx

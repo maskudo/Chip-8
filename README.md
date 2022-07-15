@@ -15,3 +15,16 @@ The version of SDL2 used is 2.0.22.
 
 I have only tested on windows with GCC/G++ MinGW but it should work with other compilers and toolkits.  
 
+Some ROMs that I've successfully managed to run are in the ROMs folder.
+
+# References
+[Cowgod's Chip-8 Technical Reference](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#0.0)
+
+[Austin Morlan's Chip-8 Tutorial](https://austinmorlan.com/posts/chip8_emulator/)
+
+[Tobias V. Langhoff's Chip-8 Tutorial](https://tobiasvl.github.io/blog/write-a-chip-8-emulator/)
+
+[Timendus's Chip-8 Test Suite](https://github.com/Timendus/chip8-test-suite#introduction)
+
+[r/EmuDev](https://www.reddit.com/r/EmuDev/s)
+

@@ -162,36 +162,54 @@ void Chip8::Tick() {
         }
         // 8xy4 - ADD Vx, Vy Set Vx = Vx + Vy, set VF = carry.
         case 0x4: {
-            // high chance i made a mistake
-            registers[0xF] = (0xFF < (registers[(0x0F00 & opcode) >> 8] + registers[(0x00F0 & opcode) >> 4]));
-            registers[(0x0F00 & opcode) >> 8] += registers[(0x00F0 & opcode) >> 4];
+            uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+            uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+
+            uint16_t sum = registers[Vx] + registers[Vy];
+            auto carry = 0;
+            if (sum > 255U) {
+                carry = 1;
+            }
+            registers[Vx] = sum & 0xFFu;
+            registers[0xF] = carry;
             break;
         }
         // 8xy5 - SUB Vx, Vy Set Vx = Vx - Vy, set VF = NOT borrow.
         case 0x5: {
-            registers[0xF] = ((registers[(0x0F00 & opcode) >> 8] < registers[(0x00F0 & opcode) >> 4]));
-            registers[(0x0F00 & opcode) >> 8] -= registers[(0x00F0 & opcode) >> 4];
+            uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+            uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+            auto borrow = 0;
+            if (registers[Vx] > registers[Vy]) {
+                borrow = 1;
+            }
+            registers[Vx] -= registers[Vy];
+            registers[0xF] = borrow;
+            // registers[0xF] = ((registers[(0x0F00 & opcode) >> 8] < registers[(0x00F0 & opcode) >> 4]));
+            // registers[(0x0F00 & opcode) >> 8] -= registers[(0x00F0 & opcode) >> 4];
             break;
         }
         // 8xy6 - SHR Vx {, Vy}  Set Vx = Vx SHR 1.
         // If the least-significant bit of Vx is 1, then VF is set to 1, otherwise 0. Then Vx is divided by 2.
         case 0x6: {
-            registers[0xF] = registers[(0x0F00 & opcode) >> 8] & 0x1;
+            auto shifted = registers[(0x0F00 & opcode) >> 8] & 0x1;
             registers[(0x0F00 & opcode) >> 8] >>= 1;
+            registers[0xF] = shifted;
             break;
         }
         // 8xy7 - SUBN Vx, Vy    Set Vx = Vy - Vx, set VF = NOT borrow.
         // If Vy > Vx, then VF is set to 1, otherwise 0. Then Vx is subtracted from Vy, and the results stored in Vx.
         case 0x7: {
-            registers[0xF] = ((registers[(0x0F00 & opcode) >> 8] < registers[(0x00F0 & opcode) >> 4]));
+            auto shifted = ((registers[(0x0F00 & opcode) >> 8] < registers[(0x00F0 & opcode) >> 4]));
             registers[(0x0F00 & opcode) >> 8] = registers[(0x00F0 & opcode) >> 4] - registers[(0x0F00 & opcode) >> 8];
+            registers[0xF] = shifted;
             break;
         }
         // 8xyE - SHL Vx {, Vy}  Set Vx = Vx SHL 1.
         // If the most-significant bit of Vx is 1, then VF is set to 1, otherwise to 0. Then Vx is multiplied by 2.
         case 0xE: {
-            registers[0xF] = registers[(0x0F00 & opcode) >> 8] >> 7;
+            auto shifted = registers[(0x0F00 & opcode) >> 8] >> 7;
             registers[(0x0F00 & opcode) >> 8] <<= 1;
+            registers[0xF] = shifted;
             break;
         }
         default: {

@@ -24,12 +24,17 @@ int main(int argc, char **argv) {
     // number of bytes in a row
     int videoPitch = sizeof(interpreter.display[0]) * 64;
     bool quit = false;
+    auto framestart = SDL_GetTicks();
     while (!quit) {
         int start = SDL_GetTicks();
         quit = graphics->ProcessInput(interpreter.keypad);
 
         interpreter.Tick(graphics);
-
+        auto framedelay = SDL_GetTicks() - framestart;
+        if (framedelay >= 16) {
+            interpreter.TickTimer();
+            framestart = SDL_GetTicks();
+        }
         int totalDelay = SDL_GetTicks() - start;
         if (totalDelay < delay)
             SDL_Delay(delay - totalDelay);

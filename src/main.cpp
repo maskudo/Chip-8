@@ -1,6 +1,7 @@
 #define SDL_MAIN_HANDLED
 #include "chip8.hpp"
 #include "graphics.hpp"
+#include <chrono>
 #include <iostream>
 int main(int argc, char **argv) {
     if (argc != 4) {
@@ -9,8 +10,10 @@ int main(int argc, char **argv) {
     }
 
     const int SCALE = std::stoi(argv[2]);
-    const int FREQ = std::stoi(argv[3]);
-    int delay = 1000 / FREQ;
+    const float FREQ = std::stoi(argv[3]);
+    const float FRAMERATE = 60;
+    const float FRAMEDELAY = 1000 / FRAMERATE;
+    const float CYCLEDELAY = 1000 / FREQ;
 
     Graphics *graphics = new Graphics("Chip8", SCALE * 64, SCALE * 32, 64, 32);
     chip8::Chip8 interpreter = chip8::Chip8();
@@ -24,20 +27,26 @@ int main(int argc, char **argv) {
     // number of bytes in a row
     int videoPitch = sizeof(interpreter.display[0]) * 64;
     bool quit = false;
-    auto framestart = SDL_GetTicks();
+
+    auto lastCycleTime = std::chrono::high_resolution_clock::now();
+    auto lastFrameTime = std::chrono::high_resolution_clock::now();
     while (!quit) {
-        int start = SDL_GetTicks();
         quit = graphics->ProcessInput(interpreter.keypad);
 
-        interpreter.Tick(graphics);
-        auto framedelay = SDL_GetTicks() - framestart;
-        if (framedelay >= 16) {
-            interpreter.TickTimer();
-            framestart = SDL_GetTicks();
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        float dt = std::chrono::duration<float, std::chrono::milliseconds::period>(currentTime - lastCycleTime).count();
+        if (dt > CYCLEDELAY) {
+            interpreter.Tick(graphics);
+            lastCycleTime = currentTime;
         }
-        int totalDelay = SDL_GetTicks() - start;
-        if (totalDelay < delay)
-            SDL_Delay(delay - totalDelay);
+
+        auto currentFrameTime = std::chrono::high_resolution_clock::now();
+        float frameDt = std::chrono::duration<float, std::chrono::milliseconds::period>(currentFrameTime - lastFrameTime).count();
+        // update timers every 1/60th of a second
+        if (frameDt > FRAMEDELAY) {
+            interpreter.TickTimer();
+            lastFrameTime = currentFrameTime;
+        }
     }
     delete graphics;
     return 0;

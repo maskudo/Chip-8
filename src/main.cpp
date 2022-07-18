@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
 
     interpreter.Reset();
     if (!interpreter.LoadROM(argv[1])) {
-        std::cerr << "Unable to load" << argv[1] << std::endl;
+        std::cerr << "Unable to load " << argv[1] << std::endl;
         return -1;
     }
 

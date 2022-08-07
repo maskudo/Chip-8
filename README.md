@@ -3,7 +3,7 @@ A chip-8 interpreter/emulator built in C++ using SDL2 for graphics.
 
 # Build Instructions (Windows and MinGW)
 
-1. Put SDL2 inside "devs" folder in project root directory. 
+1. Put SDL2 inside "deps" folder in project root directory. 
 2. mkdir build
 3. cd build
 4. cmake -G "MinGW Makefiles" ..

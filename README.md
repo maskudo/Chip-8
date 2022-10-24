@@ -1,6 +1,12 @@
 # Chip-8
 A chip-8 interpreter/emulator built in C++ using SDL2 for graphics. 
 
+# Screenshots
+![Breakout](screenshots/breakout.png "Breakout")
+*Breakout*
+
+![Tetris](screenshots/tetris.png "Tetris")
+*Tetris*
 # Build Instructions (Windows and MinGW)
 
 1. Put SDL2 inside "deps" folder in project root directory. 
@@ -13,7 +19,7 @@ A chip-8 interpreter/emulator built in C++ using SDL2 for graphics.
 # Notes
 The version of SDL2 used is 2.0.22. 
 
-I have only tested on windows with GCC/G++ MinGW but it should work with other compilers and toolkits.  
+I have only tested on windows with GCC/G++ MinGW but it should work with other compilers.  
 
 Some ROMs that I've successfully managed to run are in the ROMs folder.
 

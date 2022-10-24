@@ -2,10 +2,10 @@
 A chip-8 interpreter/emulator built in C++ using SDL2 for graphics. 
 
 # Screenshots
-![Breakout](/screenshots/breakout.png)
+![Breakout](screenshots/breakout.PNG)
 *Breakout*
 
-![Tetris](/screenshots/tetris.png)
+![Tetris](screenshots/tetris.PNG)
 *Tetris*
 # Build Instructions (Windows and MinGW)
 

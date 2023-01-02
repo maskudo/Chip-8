@@ -1,5 +1,5 @@
 #pragma once
-#include "graphics.hpp"
+#include <functional>
 #include <array>
 #include <cstdint>
 
@@ -44,7 +44,7 @@ public:
     void Reset();
     void stackPush(uint16_t data);
     uint16_t stackPop();
-    void Tick(Graphics *graphicsPtr);
+    void Tick(std::function<void(void)>);
     void TickTimer();
 };
 } // namespace chip8

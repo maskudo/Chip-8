@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
     const float FRAMEDELAY = 1000 / FRAMERATE;
     const float CYCLEDELAY = 1000 / FREQ;
 
-    Graphics *graphics = new Graphics("Chip8", SCALE * 64, SCALE * 32, 64, 32);
+    Graphics graphics = Graphics("Chip8", SCALE * 64, SCALE * 32, 64, 32);
     chip8::Chip8 interpreter = chip8::Chip8();
 
     interpreter.Reset();
@@ -28,15 +28,19 @@ int main(int argc, char **argv) {
     int videoPitch = sizeof(interpreter.display[0]) * 64;
     bool quit = false;
 
+    auto displayFunction = [&](){
+        graphics.Update(interpreter.display, videoPitch);
+    };
+
     auto lastCycleTime = std::chrono::high_resolution_clock::now();
     auto lastFrameTime = std::chrono::high_resolution_clock::now();
     while (!quit) {
-        quit = graphics->ProcessInput(interpreter.keypad);
+        quit = graphics.ProcessInput(interpreter.keypad);
 
         auto currentTime = std::chrono::high_resolution_clock::now();
         float dt = std::chrono::duration<float, std::chrono::milliseconds::period>(currentTime - lastCycleTime).count();
         if (dt > CYCLEDELAY) {
-            interpreter.Tick(graphics);
+            interpreter.Tick(displayFunction);
             lastCycleTime = currentTime;
         }
 
@@ -48,6 +52,5 @@ int main(int argc, char **argv) {
             lastFrameTime = currentFrameTime;
         }
     }
-    delete graphics;
     return 0;
 }
